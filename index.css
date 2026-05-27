@@ -1216,3 +1216,58 @@ a  { text-decoration: none; color: inherit; }
 }
 .checkout-head h3 { font-family: var(--font-serif); font-size: 22px; color: var(--ink); margin: 0; }
 .checkout-body { padding: 24px; overflow-y: auto; max-height: 80vh; }
+/* -- FAQ SECTION -------------------------------- */
+.faq-section {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 64px 32px;
+  border-top: 1px solid var(--border);
+}
+
+.faq-item {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  margin-bottom: 12px;
+  background: var(--card-bg);
+  overflow: hidden;
+}
+
+.faq-question {
+  padding: 16px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  font-weight: 500;
+  color: var(--ink);
+  transition: background 0.2s;
+  font-family: var(--font-sans);
+}
+
+.faq-question:hover {
+  background: var(--tag-bg);
+}
+
+.faq-question i {
+  color: var(--rust);
+  transition: transform 0.3s;
+}
+
+.faq-item.active .faq-question i {
+  transform: rotate(45deg);
+}
+
+.faq-answer {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-out, padding 0.3s ease;
+  padding: 0 20px;
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.faq-item.active .faq-answer {
+  max-height: 200px;
+  padding: 0 20px 16px;
+}

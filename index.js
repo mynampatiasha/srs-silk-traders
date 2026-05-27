@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════════
-   DEVISRI KALAMKARI — index.js
+   SRS SILK TRADERS — index.js
    Handles: Products, Cart, Reviews, Gallery,
             Contact Form, Filters, Nav
 ═══════════════════════════════════════════════ */
@@ -13,194 +13,129 @@
 const PRODUCTS = [
   {
     id: 1,
-    name: 'Mythological Peacock Saree',
-    cat: 'saree',
-    price: 2200,
-    orig: 2800,
-    // Draped Indian cotton saree — warm earthy tones, traditional weave
-    img: 'Mythological_Peacock_Saree.jpg',
-    tags: ['Pen Kalamkari', 'Cotton', 'Natural dye'],
+    name: 'Bridal Kanjeevaram (Red & Gold)',
+    cat: 'bridal',
+    price: 12500,
+    orig: 16000,
+    img: 'srs_kanjeevaram_red_1779810369174.png',
+    tags: ['Pure Silk', 'Bridal', 'Kanjeevaram'],
     inStock: true,
-    desc: 'Hand-drawn peacock motifs on fine cotton, natural indigo & pomegranate dye',
+    desc: 'Vibrant red and gold Kanjeevaram silk saree with intricate zari weaving, perfect for weddings.',
   },
   {
     id: 2,
-    name: 'Krishna Leela Dupatta',
-    cat: 'dupatta',
-    price: 850,
-    orig: 1100,
-    // Indigo block-printed cotton fabric/scarf with rich deep tones
-    img: 'Krishna_Leela_Dupatta_2.png',
-    tags: ['Block print', 'Chanderi', 'Indigo dye'],
+    name: 'Soft Silk Saree (Pastel Green)',
+    cat: 'soft_silk',
+    price: 4500,
+    orig: 5500,
+    img: 'srs_soft_silk_new_1779811094967.png',
+    tags: ['Soft Silk', 'Pastel', 'Party Wear'],
     inStock: true,
-    desc: 'Block-printed Krishna scenes on chanderi, indigo natural dye',
+    desc: 'Elegant pastel green soft silk saree with silver zari border, lightweight and premium.',
   },
   {
     id: 3,
-    name: 'Temple Border Silk Saree',
-    cat: 'saree',
-    price: 4500,
-    orig: 5200,
-    // Rich silk saree with ornate border detail — jewel tones
-    img: 'Temple_Border_Silk_Saree.webp',
-    tags: ['Pen Kalamkari', 'Silk', 'Heritage'],
+    name: 'Wholesale Saree Bundle (50 Pcs)',
+    cat: 'wholesale',
+    price: 45000,
+    orig: 55000,
+    img: 'srs_saree_circle_1779812099822.png',
+    tags: ['Wholesale', 'Mixed Bundle', 'Bulk'],
     inStock: true,
-    desc: 'Temple arch border — pure Bangalore silk, hand-painted zari motifs',
+    desc: 'A mixed bundle of 50 high-quality silk sarees for boutiques and manufacturers.',
   },
   {
     id: 4,
-    name: 'Floral Vine Kurta Set',
-    cat: 'kurta',
-    price: 1650,
-    orig: 2000,
-    // Unstitched cotton fabric with floral block-print in saffron/rust tones
-    img: 'Floral_Vine_Kurta_Set_2.png',
-    tags: ['Cotton', 'Pomegranate dye', 'Unstitched'],
+    name: 'Royal Blue Kanjeevaram',
+    cat: 'bridal',
+    price: 14000,
+    orig: 17500,
+    img: 'srs_hero_image_1779810349059.png',
+    tags: ['Pure Silk', 'Bridal', 'Heavy Zari'],
     inStock: true,
-    desc: 'Vine & lotus motif — unstitched 2-piece set, pomegranate & turmeric dye',
+    desc: 'Rich royal blue and gold Kanjeevaram pure silk saree with heavy zari work.',
   },
   {
     id: 5,
-    name: 'Deer & Forest Dupatta',
-    cat: 'dupatta',
-    price: 720,
-    orig: 900,
-    // Soft draped cotton dupatta with nature motif print in earthy palette
-    img: 'Deer_Forest_Dupatta.jpg',
-    tags: ['Pen Kalamkari', 'Cotton'],
-    inStock: false,
-    desc: 'Deer amid forest drawn free-hand with bamboo pen in myrobalan dye',
-  },
-  {
-    id: 6,
-    name: 'Lotus Pond Fabric (1 m)',
-    cat: 'fabric',
-    price: 480,
-    orig: 580,
-    // Natural off-white cotton yardage — rolled fabric, clean texture
-    img: 'Lotus_Pond_Fabric_2.png',
-    tags: ['Yardage', 'Cotton', 'Lotus'],
+    name: 'Custom Blouse Stitching Service',
+    cat: 'all',
+    price: 1500,
+    orig: 2000,
+    img: 'srs_blouse_stitching_1779810424346.png',
+    tags: ['Service', 'Stitching', 'Custom'],
     inStock: true,
-    desc: 'Lotus pond block-print yardage, 44" wide — perfect for blouses & kurtas',
-  },
-  {
-    id: 7,
-    name: 'Dashavatara Panel Saree',
-    cat: 'saree',
-    price: 3800,
-    orig: 4600,
-    // Traditional Indian saree with intricate panel detailing — muted tones
-    img: 'Dashavatara_Panel_Saree_2.png',
-    tags: ['Pen Kalamkari', 'Cotton', 'Mythological'],
-    inStock: true,
-    desc: 'Ten avatars of Vishnu depicted panel by panel in full pen kalamkari',
-  },
-  {
-    id: 8,
-    name: 'Geometric Block Fabric (2 m)',
-    cat: 'fabric',
-    price: 760,
-    orig: 900,
-    // Folded fabric with geometric block-print — rust & black earthy tones
-    img: 'Geometric_Block_Fabric.webp',
-    tags: ['Block print', 'Geometric', 'Contemporary'],
-    inStock: true,
-    desc: 'Contemporary geometric block-print — earthy rust & black, 44" wide',
-  },
-  {
-    id: 9,
-    name: 'Ramayana Scene Kurta Set',
-    cat: 'kurta',
-    price: 1900,
-    orig: 2200,
-    // Hand-printed cotton fabric with scene-panel layout in warm ochre
-    img: 'Ramayana_Scene_Kurta_Set.jpg',
-    tags: ['Pen Kalamkari', 'Unstitched', 'Mythological'],
-    inStock: true,
-    desc: 'Ramayana panels hand-painted on cotton — unstitched 2-piece with dupatta',
-  },
+    desc: 'Add custom designer blouse stitching to your saree order. Perfect fit guaranteed.',
+  }
 ];
 
 const REVIEWS = [
   {
-    name: 'Nidhi Mehta',
-    loc: 'Mumbai',
+    name: 'Aashini & Gunjan Desai',
+    loc: 'USA',
     stars: 5,
-    text: 'One of a kind — got beautiful dupattas and sarees. Muniram and Bhargavi were extremely hospitable. Visited the factory and it was magical seeing the painting live.',
-    date: '3 months ago',
+    text: 'Very nice sarees. Perfect stitching. Will definitely order from USA next year. Arrived in just few days!! You provided the best service. Blouses and stitching was so quick and perfect. Thank you 🙏',
+    date: '2 years ago',
   },
   {
-    name: 'Amanjit Kaur',
-    loc: 'Chandigarh',
+    name: 'Sunitha Suni',
+    loc: 'Bengaluru',
     stars: 5,
-    text: 'Great collection and the work is very good! The indigo dupatta I ordered was even more stunning in person. Highly recommend.',
-    date: '10 months ago',
+    text: 'It was lockdown could not go out to shop, but this shop perosn was very polite shared photos of saree through watsapp ,through which I shopped lovely sarees... They have evry good collection.',
+    date: '5 years ago',
   },
   {
-    name: 'Tia Sanghvi',
-    loc: 'Ahmedabad',
+    name: 'Tejovathi Theerdham',
+    loc: 'Manufacturer',
     stars: 5,
-    text: 'Amazing art — Mr. Muniram walked us through the whole process. Very talented artisans. Must must must buy!',
-    date: '1 year ago',
+    text: 'We r manufacturer of treditional art hand painted pen kamlakari sarees, we parches silk sarees from srs silks',
+    date: '3 years ago',
   },
   {
-    name: 'Priya Ramachandran',
-    loc: 'Chennai',
+    name: 'Verified Customer',
+    loc: 'India',
     stars: 5,
-    text: 'Humble people and reasonably priced. The saree arrived beautifully packed and exceeded every expectation.',
-    date: '6 months ago',
+    text: 'Nice collections and comfortable price Good service and happy satisfaction.',
+    date: 'Recent',
   },
   {
-    name: 'Sneha Verma',
-    loc: 'Delhi',
+    name: 'Happy Shopper',
+    loc: 'Bengaluru',
     stars: 5,
-    text: 'Budget-friendly prices with loyal service. The designs are elegant and the pieces are truly unique. Will order again!',
-    date: '4 months ago',
-  },
-  {
-    name: 'Meghna Joshi',
-    loc: 'Hyderabad',
-    stars: 5,
-    text: 'Absolutely thrilled with my kalamkari painting. The artisan\'s skill is evident in every brushstroke. A true heirloom piece.',
-    date: '2 months ago',
-  },
+    text: 'Nice place, helpful people & nice collection, cheap rate, very nice materials',
+    date: 'Recent',
+  }
 ];
 
 const GALLERY_IMAGES = [
   {
-    // LARGE feature: artisan hand-drawing fine lines on fabric with bamboo pen
-    url: 'Mythological_Peacock_Saree.jpg',
-    alt: 'Artisan drawing intricate kalamkari lines with a bamboo pen — Bhaskarpeta workshop',
-    label: 'The bamboo pen at work',
+    url: 'srs_kanjeevaram_red_1779810369174.png',
+    alt: 'Vibrant red and gold Kanjeevaram silk saree fabric',
+    label: 'Intricate Zari Weaving',
   },
   {
-    // Natural dye bowls — red, indigo, turmeric laid out on cloth
-    url: 'Krishna_Leela_Dupatta_2.png',
-    alt: 'Natural dye bowls — indigo, pomegranate red, turmeric yellow',
-    label: 'Natural dyes only',
+    url: 'srs_blouse_stitching_1779810424346.png',
+    alt: 'Artisan hands stitching a beautiful designer saree blouse',
+    label: 'Perfect Blouse Stitching',
   },
   {
-    // Close-up of finished hand-painted textile detail
-    url: 'Temple_Border_Silk_Saree.webp',
-    alt: 'Close-up of finished kalamkari motif on cotton fabric',
-    label: 'Motif detail',
+    url: 'srs_saree_circle_1779812099822.png',
+    alt: 'Stack of colorful pure silk sarees for wholesale',
+    label: 'Wholesale Supplies',
   },
   {
-    // Stack of folded Indian textiles — sarees and fabric
-    url: 'Floral_Vine_Kurta_Set_2.png',
-    alt: 'Stack of finished kalamkari pieces ready to ship',
-    label: 'Ready to ship',
+    url: 'srs_soft_silk_new_1779811094967.png',
+    alt: 'Pastel green soft silk saree',
+    label: 'Elegant Soft Silks',
   },
   {
-    // Block printing stamp pressed on cotton — craft process
-    url: 'Deer_Forest_Dupatta.jpg',
-    alt: 'Block printing stamp pressed onto cotton fabric by artisan hands',
-    label: 'Block printing',
+    url: 'srs_contact_banner_new_1779852919629.png',
+    alt: 'Beautifully decorated boutique interior',
+    label: 'Visit Our Boutique',
   },
 ];
 
-const FREE_SHIPPING_THRESHOLD = 2000;
-const SHIPPING_COST           = 99;
+const FREE_SHIPPING_THRESHOLD = 5000;
+const SHIPPING_COST           = 150;
 
 /* ─────────────────────────────────────────────
    STATE
@@ -261,7 +196,7 @@ function renderProducts(filter) {
             </div>` : ''}
         </div>
         <div class="card-body">
-          <div class="card-cat">${p.cat}</div>
+          <div class="card-cat">${p.cat.replace('_', ' ')}</div>
           <div class="card-name">${p.name}</div>
           <div class="card-desc">${p.desc}</div>
           <div class="card-row">
@@ -465,7 +400,7 @@ function initCheckout() {
     const address = document.getElementById('co-address').value;
     const coords = document.getElementById('co-coords').value;
     
-    let text = `*New Order - Devisri Kalamkari*\n\n`;
+    let text = `*New Order - SRS Silk Traders*\n\n`;
     text += `*Customer Details*\nName: ${name}\nPhone: ${phone}\nAddress: ${address}\n`;
     if (coords) {
       text += `GPS Location: https://maps.google.com/?q=${coords}\n`;
@@ -483,7 +418,7 @@ function initCheckout() {
     text += `\nSubtotal: ₹${subtotal.toLocaleString('en-IN')}\n`;
     text += `Shipping: ${shipping === 0 ? 'Free' : '₹' + shipping}\n`;
     text += `*Total: ₹${total.toLocaleString('en-IN')}*`;
-    const waUrl = `https://wa.me/918712338621?text=${encodeURIComponent(text)}`;
+    const waUrl = `https://wa.me/919341218059?text=${encodeURIComponent(text)}`;
     window.open(waUrl, '_blank');
     
     closeCheckout();
@@ -595,14 +530,14 @@ function handleFormSubmit(e) {
   const message = document.getElementById('cf-message').value;
   const isWhatsapp = document.getElementById('cf-whatsapp').checked;
 
-  let text = `*New Contact / Enquiry*\n\n`;
+  let text = `*New Contact / Enquiry (SRS Silk Traders)*\n\n`;
   text += `*Details*\nName: ${name}\nPhone: ${phone}\nEmail: ${email}\nEnquiry Type: ${type}\n`;
   
   if (document.getElementById('cf-product').value) text += `Product Category: ${product}\n`;
   
   if (document.getElementById('cf-type').value === 'custom_order') {
     text += `\n*Customisation Preferences*\n`;
-    if (motif) text += `Motif/Theme: ${motif}\n`;
+    if (motif) text += `Specific Requirements: ${motif}\n`;
     if (document.getElementById('cf-fabric').value) text += `Fabric: ${fabric}\n`;
     if (colors) text += `Colors: ${colors}\n`;
     if (document.getElementById('cf-budget').value) text += `Budget: ${budget}\n`;
@@ -611,7 +546,7 @@ function handleFormSubmit(e) {
   text += `\n*Message*\n${message}\n`;
   if (isWhatsapp) text += `\n_(Customer is happy to be contacted on WhatsApp)_`;
 
-  const waUrl = `https://wa.me/918712338621?text=${encodeURIComponent(text)}`;
+  const waUrl = `https://wa.me/919341218059?text=${encodeURIComponent(text)}`;
   window.open(waUrl, '_blank');
   
   document.getElementById('contact-form').reset();
@@ -647,6 +582,28 @@ function initNav() {
 }
 
 /* ─────────────────────────────────────────────
+   FAQ
+───────────────────────────────────────────── */
+
+function initFAQ() {
+  document.querySelectorAll('.faq-question').forEach(question => {
+    question.addEventListener('click', () => {
+      const item = question.parentElement;
+      const isActive = item.classList.contains('active');
+      
+      // Close all others
+      document.querySelectorAll('.faq-item').forEach(faq => {
+        faq.classList.remove('active');
+      });
+      
+      if (!isActive) {
+        item.classList.add('active');
+      }
+    });
+  });
+}
+
+/* ─────────────────────────────────────────────
    INIT
 ───────────────────────────────────────────── */
 
@@ -659,5 +616,6 @@ document.addEventListener('DOMContentLoaded', () => {
   initCart();
   initCheckout();
   initContactForm();
+  initFAQ();
   initNav();
 });
