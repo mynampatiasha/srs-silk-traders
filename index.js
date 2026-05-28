@@ -158,7 +158,7 @@ function renderProducts(filter) {
   grid.querySelectorAll('.add-btn').forEach(btn => {
     btn.addEventListener('click', (e) => {
       e.stopPropagation();
-      addToCart(parseInt(btn.dataset.productId, 10));
+      addToCart(btn.dataset.productId);
     });
   });
 }
