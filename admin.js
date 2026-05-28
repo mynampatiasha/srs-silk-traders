@@ -315,9 +315,23 @@ window.deleteBanner = async (id) => {
 };
 
 // Initialize Admin Data
-loadCategories();
-loadProducts();
-loadBanners();
+function initAdmin() {
+  loadCategories();
+  loadProducts();
+  loadBanners();
+}
+
+window.checkPin = () => {
+  const pin = document.getElementById('admin-pin').value;
+  if (pin === '8059' || pin === '1234') { // Using parts of their phone number as default PIN
+    document.getElementById('login-overlay').style.display = 'none';
+    document.getElementById('main-admin-content').style.display = 'flex';
+    initAdmin();
+  } else {
+    document.getElementById('pin-error').style.display = 'block';
+  }
+};
+
 
 
 
