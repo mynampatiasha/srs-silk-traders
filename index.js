@@ -74,7 +74,7 @@ const SHIPPING_COST           = 150;
    STATE
 ───────────────────────────────────────────── */
 
-let cart         = [];
+let cart = JSON.parse(localStorage.getItem("srs_cart") || "[]");
 let activeFilter = 'all';
 
 /* ─────────────────────────────────────────────
@@ -202,6 +202,7 @@ function removeFromCart(index) {
 }
 
 function renderCart() {
+  localStorage.setItem('srs_cart', JSON.stringify(cart));
   const countEl = document.getElementById('cart-count');
   const itemsEl = document.getElementById('cart-items');
 
@@ -681,6 +682,7 @@ function openProductModal(id) {
 function closeProductModal() {
   document.getElementById('product-modal').classList.remove('open');
 }
+
 
 
 

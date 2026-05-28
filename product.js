@@ -83,7 +83,8 @@ document.addEventListener('DOMContentLoaded', async () => {
       };
       
       btnWa.onclick = () => {
-        window.open('https://wa.me/919341218059?text=I am interested in ' + p.name + ' (' + p.id + ')', '_blank');
+        const text = `Hi SRS Silk Traders, I am interested in this product:\n\n*` + p.name + `*\nPrice: ?` + p.price + `\nLink: ` + window.location.href;
+        window.open('https://wa.me/919341218059?text=' + encodeURIComponent(text), '_blank');
       };
     } else {
       btnAddCart.textContent = "Sold Out";
@@ -91,7 +92,8 @@ document.addEventListener('DOMContentLoaded', async () => {
       btnAddCart.disabled = true;
       btnWa.textContent = "Notify me when back in stock (WhatsApp)";
       btnWa.onclick = () => {
-        window.open('https://wa.me/919341218059?text=Please notify me when ' + p.name + ' (' + p.id + ') is back in stock.', '_blank');
+        const text = `Hi SRS Silk Traders, please notify me when this product is back in stock:\n\n*` + p.name + `*\nLink: ` + window.location.href;
+        window.open('https://wa.me/919341218059?text=' + encodeURIComponent(text), '_blank');
       };
     }
 
@@ -151,3 +153,6 @@ async function loadRelatedProducts(category, currentId) {
     console.error("Error loading related products", err);
   }
 }
+
+
+
