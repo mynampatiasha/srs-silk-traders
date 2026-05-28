@@ -10,63 +10,22 @@
    DATA
 ───────────────────────────────────────────── */
 
-const PRODUCTS = [
-  {
-    id: 1,
-    name: 'Bridal Kanjeevaram (Red & Gold)',
-    cat: 'bridal',
-    price: 12500,
-    orig: 16000,
-    img: 'srs_kanjeevaram_red_1779810369174.png',
-    tags: ['Pure Silk', 'Bridal', 'Kanjeevaram'],
-    inStock: true,
-    desc: 'Vibrant red and gold Kanjeevaram silk saree with intricate zari weaving, perfect for weddings.',
-  },
-  {
-    id: 2,
-    name: 'Soft Silk Saree (Pastel Green)',
-    cat: 'soft_silk',
-    price: 4500,
-    orig: 5500,
-    img: 'srs_soft_silk_new_1779811094967.png',
-    tags: ['Soft Silk', 'Pastel', 'Party Wear'],
-    inStock: true,
-    desc: 'Elegant pastel green soft silk saree with silver zari border, lightweight and premium.',
-  },
-  {
-    id: 3,
-    name: 'Wholesale Saree Bundle (50 Pcs)',
-    cat: 'wholesale',
-    price: 45000,
-    orig: 55000,
-    img: 'srs_saree_circle_1779812099822.png',
-    tags: ['Wholesale', 'Mixed Bundle', 'Bulk'],
-    inStock: true,
-    desc: 'A mixed bundle of 50 high-quality silk sarees for boutiques and manufacturers.',
-  },
-  {
-    id: 4,
-    name: 'Royal Blue Kanjeevaram',
-    cat: 'bridal',
-    price: 14000,
-    orig: 17500,
-    img: 'srs_hero_image_1779810349059.png',
-    tags: ['Pure Silk', 'Bridal', 'Heavy Zari'],
-    inStock: true,
-    desc: 'Rich royal blue and gold Kanjeevaram pure silk saree with heavy zari work.',
-  },
-  {
-    id: 5,
-    name: 'Custom Blouse Stitching Service',
-    cat: 'all',
-    price: 1500,
-    orig: 2000,
-    img: 'srs_blouse_stitching_1779810424346.png',
-    tags: ['Service', 'Stitching', 'Custom'],
-    inStock: true,
-    desc: 'Add custom designer blouse stitching to your saree order. Perfect fit guaranteed.',
-  }
-];
+const firebaseConfig = {
+  apiKey: "AIzaSyAv8WZPd7k6oGAsGX10NPAOp6iuqU3QE1w",
+  authDomain: "experime-3251a.firebaseapp.com",
+  projectId: "experime-3251a",
+  storageBucket: "experime-3251a.firebasestorage.app",
+  messagingSenderId: "256324869428",
+  appId: "1:256324869428:web:02a6392b90e77b2f805961"
+};
+
+// Initialize Firebase
+if (!firebase.apps.length) {
+  firebase.initializeApp(firebaseConfig);
+}
+const db = firebase.firestore();
+
+let PRODUCTS = [];
 
 const REVIEWS = [
   {
@@ -106,33 +65,7 @@ const REVIEWS = [
   }
 ];
 
-const GALLERY_IMAGES = [
-  {
-    url: 'srs_kanjeevaram_red_1779810369174.png',
-    alt: 'Vibrant red and gold Kanjeevaram silk saree fabric',
-    label: 'Intricate Zari Weaving',
-  },
-  {
-    url: 'srs_blouse_stitching_1779810424346.png',
-    alt: 'Artisan hands stitching a beautiful designer saree blouse',
-    label: 'Perfect Blouse Stitching',
-  },
-  {
-    url: 'srs_saree_circle_1779812099822.png',
-    alt: 'Stack of colorful pure silk sarees for wholesale',
-    label: 'Wholesale Supplies',
-  },
-  {
-    url: 'srs_soft_silk_new_1779811094967.png',
-    alt: 'Pastel green soft silk saree',
-    label: 'Elegant Soft Silks',
-  },
-  {
-    url: 'srs_contact_banner_new_1779852919629.png',
-    alt: 'Beautifully decorated boutique interior',
-    label: 'Visit Our Boutique',
-  },
-];
+let GALLERY_IMAGES = [];
 
 const FREE_SHIPPING_THRESHOLD = 5000;
 const SHIPPING_COST           = 150;
@@ -453,6 +386,35 @@ function renderReviews() {
    GALLERY
 ───────────────────────────────────────────── */
 
+function initHeroSlider() {
+  const heroContainer = document.getElementById('hero-banner-container');
+  if (!heroContainer || GALLERY_IMAGES.length === 0) return;
+
+  heroContainer.innerHTML = '<div class="hero-tag">?? Chickpet, Bengaluru</div>';
+  
+  let currentIndex = 0;
+  
+  const imgElement = document.createElement('img');
+  imgElement.style.width = '100%';
+  imgElement.style.height = '100%';
+  imgElement.style.objectFit = 'cover';
+  imgElement.style.transition = 'opacity 0.8s ease-in-out';
+  
+  imgElement.src = GALLERY_IMAGES[currentIndex].url;
+  heroContainer.prepend(imgElement);
+
+  if (GALLERY_IMAGES.length > 1) {
+    setInterval(() => {
+      imgElement.style.opacity = 0;
+      setTimeout(() => {
+        currentIndex = (currentIndex + 1) % GALLERY_IMAGES.length;
+        imgElement.src = GALLERY_IMAGES[currentIndex].url;
+        imgElement.style.opacity = 1;
+      }, 800);
+    }, 4000);
+  }
+}
+
 function renderGallery() {
   document.getElementById('gallery-grid').innerHTML = GALLERY_IMAGES.map(g => `
     <div class="g-img">
@@ -607,10 +569,21 @@ function initFAQ() {
    INIT
 ───────────────────────────────────────────── */
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+  try {
+    const pSnap = await db.collection('products').get();
+    PRODUCTS = pSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+    const gSnap = await db.collection('banners').get();
+    GALLERY_IMAGES = gSnap.docs.map(doc => doc.data());
+  } catch (err) {
+    console.error("Firebase fetch error:", err);
+  }
+
   renderProducts('all');
   renderReviews();
   renderGallery();
+  initHeroSlider();
   renderCart();
   initFilters();
   initCart();
@@ -619,3 +592,4 @@ document.addEventListener('DOMContentLoaded', () => {
   initFAQ();
   initNav();
 });
+
