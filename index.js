@@ -428,15 +428,15 @@ function initHeroSlider() {
 }
 
 function renderGallery() {
-  document.getElementById('gallery-grid').innerHTML = GALLERY_IMAGES.map(g => `
-    <div class="g-img">
+  document.getElementById('gallery-grid').innerHTML = PRODUCTS.slice(0, 8).map(p => `
+    <div class="g-img" onclick="window.location.href='product.html?id=${p.id}'" style="cursor:pointer;">
       <img
-        src="${g.url}"
-        alt="${g.alt}"
+        src="${p.img}"
+        alt="${p.name}"
         loading="lazy"
         onerror="this.style.background='#d4b896';this.removeAttribute('src')"
       />
-      <div class="g-label">${g.label}</div>
+      <div class="g-label">${p.name}</div>
     </div>
   `).join('');
 }
