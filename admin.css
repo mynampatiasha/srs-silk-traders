@@ -125,3 +125,52 @@ button:disabled {
   box-shadow: 0 4px 6px rgba(0,0,0,0.1);
   display: none;
 }
+
+@media (max-width: 768px) {
+  body {
+    flex-direction: column;
+    height: auto;
+    min-height: 100vh;
+  }
+  .admin-sidebar {
+    width: 100%;
+    padding: 10px 0;
+    flex-direction: column;
+    align-items: center;
+  }
+  .admin-sidebar h2 {
+    margin-bottom: 10px;
+  }
+  .admin-sidebar nav {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 5px;
+    width: 100%;
+  }
+  .admin-sidebar nav a {
+    padding: 10px 15px;
+    border-left: none;
+    border-bottom: 2px solid transparent;
+    text-align: center;
+    border-radius: 4px;
+  }
+  .admin-sidebar nav a.active {
+    border-left: none;
+    border-bottom: 2px solid #3b82f6;
+    background: #334155;
+  }
+  .admin-main {
+    padding: 15px;
+    overflow-y: visible;
+  }
+  .tab-content {
+    padding: 15px;
+  }
+  form {
+    grid-template-columns: 1fr;
+  }
+  .list-grid {
+    grid-template-columns: 1fr;
+  }
+}
