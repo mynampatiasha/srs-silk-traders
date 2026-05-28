@@ -138,7 +138,11 @@ function loadProducts() {
           <strong>${p.name}</strong>
           <span>₹${p.price} <strike>₹${p.orig}</strike></span>
           <span>Cat: ${p.cat}</span>
-          <button onclick="deleteProduct('${doc.id}')">Delete</button>
+          <div style="margin-top: 10px; display: flex; gap: 5px; flex-wrap: wrap;">
+            <button onclick="toggleStock('${doc.id}', ${p.inStock})" style="background: ${p.inStock ? '#4CAF50' : '#ff9800'};">${p.inStock ? 'In Stock' : 'Out of Stock'}</button>
+            <button onclick="editProduct('${doc.id}')" style="background: #2196F3;">Edit</button>
+            <button onclick="deleteProduct('${doc.id}')">Delete</button>
+          </div>
         </div>
       `;
     });
@@ -177,13 +181,13 @@ window.removeProductImage = (btn, fileName) => {
 productForm.addEventListener('submit', async (e) => {
   e.preventDefault();
   
-  if (productFiles.length === 0) {
+  if (!window.editingProductId && productFiles.length === 0) {
     alert("Please select at least one image.");
     return;
   }
 
   btnAddProduct.disabled = true;
-  btnAddProduct.textContent = "Uploading...";
+  btnAddProduct.textContent = window.editingProductId ? "Updating..." : "Uploading...";
 
   const name = document.getElementById('p-name').value;
   const price = Number(document.getElementById('p-price').value);
@@ -196,27 +200,35 @@ productForm.addEventListener('submit', async (e) => {
   const metaDesc = document.getElementById('p-meta-desc').value;
 
   try {
-    let uploadedUrls = [];
-    for (let file of productFiles) {
-      const base64Img = await compressImage(file, 800); // 800px max for products
-      uploadedUrls.push(base64Img);
+    let updateData = { name, price, orig, cat, desc, tags, metaTitle, metaDesc };
+
+    if (productFiles.length > 0) {
+      let uploadedUrls = [];
+      for (let file of productFiles) {
+        const base64Img = await compressImage(file, 800);
+        uploadedUrls.push(base64Img);
+      }
+      updateData.img = uploadedUrls[0];
+      updateData.imgUrls = uploadedUrls;
     }
 
-    await db.collection('products').add({
-      name, price, orig, cat, desc, tags, metaTitle, metaDesc, 
-      img: uploadedUrls[0], 
-      imgUrls: uploadedUrls, 
-      inStock: true, 
-      createdAt: firebase.firestore.FieldValue.serverTimestamp()
-    });
+    if (window.editingProductId) {
+      await db.collection('products').doc(window.editingProductId).update(updateData);
+      window.editingProductId = null;
+      showStatus('Product Updated Successfully!');
+    } else {
+      updateData.inStock = true;
+      updateData.createdAt = firebase.firestore.FieldValue.serverTimestamp();
+      await db.collection('products').add(updateData);
+      showStatus('Product Added Successfully!');
+    }
 
     productForm.reset();
     productFiles = [];
     previewContainer.innerHTML = '';
-    showStatus('Product Added Successfully!');
   } catch (error) {
     console.error(error);
-    alert('Error uploading product!');
+    alert('Error saving product!');
   }
 
   btnAddProduct.disabled = false;
