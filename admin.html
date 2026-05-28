@@ -62,7 +62,8 @@
       <form id="cat-form">
         <input type="text" id="c-id" placeholder="Category ID (e.g., fancy_sarees)" required>
         <input type="text" id="c-name" placeholder="Display Name (e.g., Fancy Sarees)" required>
-        <button type="submit">Add Category</button>
+        <input type="file" id="c-img" accept="image/*" required style="grid-column: span 2;">
+        <button type="submit" id="btn-add-cat">Add Category</button>
       </form>
       <h3>Current Categories</h3>
       <div id="cats-list" class="list-grid"></div>

@@ -115,7 +115,7 @@ function renderProducts(filter) {
   grid.innerHTML = filtered.map(p => {
     const savings = discount(p.price, p.orig);
     return `
-      <div class="card" data-id="${p.id}">
+      <div class="card" data-id="${p.id}" onclick="window.location.href='product.html?id=${p.id}'" style="cursor: pointer;">
         <div class="card-img">
           <img
             src="${p.img}"
@@ -387,30 +387,42 @@ function renderReviews() {
 ───────────────────────────────────────────── */
 
 function initHeroSlider() {
-  const heroContainer = document.getElementById('hero-banner-container');
+  const heroContainer = document.getElementById('banner-carousel');
   if (!heroContainer || GALLERY_IMAGES.length === 0) return;
-
-  heroContainer.innerHTML = '<div class="hero-tag">?? Chickpet, Bengaluru</div>';
+  
+  heroContainer.style.display = 'block';
+  heroContainer.innerHTML = '';
+  
+  const isMobile = window.innerWidth <= 768;
+  const itemsPerView = isMobile ? 1 : 2;
+  
+  const track = document.createElement('div');
+  track.style.display = 'flex';
+  track.style.width = (GALLERY_IMAGES.length * (100 / itemsPerView)) + '%';
+  track.style.transition = 'transform 0.6s ease-in-out';
+  
+  GALLERY_IMAGES.forEach(b => {
+    const slide = document.createElement('div');
+    slide.style.width = (100 / GALLERY_IMAGES.length) + '%';
+    slide.style.flexShrink = '0';
+    slide.style.padding = '15px';
+    slide.style.boxSizing = 'border-box';
+    slide.innerHTML = `<img src="${b.url}" alt="${b.alt}" style="width: 100%; height: auto; display: block; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">`;
+    track.appendChild(slide);
+  });
+  
+  heroContainer.appendChild(track);
   
   let currentIndex = 0;
+  const maxIndex = GALLERY_IMAGES.length - itemsPerView;
   
-  const imgElement = document.createElement('img');
-  imgElement.style.width = '100%';
-  imgElement.style.height = '100%';
-  imgElement.style.objectFit = 'cover';
-  imgElement.style.transition = 'opacity 0.8s ease-in-out';
-  
-  imgElement.src = GALLERY_IMAGES[currentIndex].url;
-  heroContainer.prepend(imgElement);
-
-  if (GALLERY_IMAGES.length > 1) {
+  if (maxIndex > 0) {
     setInterval(() => {
-      imgElement.style.opacity = 0;
-      setTimeout(() => {
-        currentIndex = (currentIndex + 1) % GALLERY_IMAGES.length;
-        imgElement.src = GALLERY_IMAGES[currentIndex].url;
-        imgElement.style.opacity = 1;
-      }, 800);
+      currentIndex++;
+      if (currentIndex > maxIndex) {
+        currentIndex = 0;
+      }
+      track.style.transform = `translateX(-${currentIndex * (100 / GALLERY_IMAGES.length)}%)`;
     }, 4000);
   }
 }
@@ -576,6 +588,30 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const gSnap = await db.collection('banners').get();
     GALLERY_IMAGES = gSnap.docs.map(doc => doc.data());
+
+    const cSnap = await db.collection('categories').get();
+    const dynamicCats = cSnap.docs.map(doc => doc.data());
+    const fkContainer = document.getElementById('flipkart-cats');
+    const filterGroup = document.getElementById('filters');
+    
+    if (fkContainer && dynamicCats.length > 0) {
+      fkContainer.innerHTML = '';
+      let filterHtml = `<span class="filter-label">Filter by:</span><button class="filter-btn active" data-cat="all">All</button>`;
+      
+      dynamicCats.forEach(cat => {
+        // Flipkart style
+        fkContainer.innerHTML += `
+          <div class="fk-cat" onclick="document.querySelector('.filter-btn[data-cat=\\'${cat.id}\\']').click(); window.scrollTo({top: document.getElementById('collection').offsetTop, behavior: 'smooth'});">
+            <img src="${cat.img}" alt="${cat.name}" onerror="this.src='https://via.placeholder.com/70/dddddd/333333?text=Img'">
+            <span>${cat.name}</span>
+          </div>
+        `;
+        // Old filter buttons
+        filterHtml += `<button class="filter-btn" data-cat="${cat.id}">${cat.name}</button>`;
+      });
+      
+      if (filterGroup) filterGroup.innerHTML = filterHtml;
+    }
   } catch (err) {
     console.error("Firebase fetch error:", err);
   }
@@ -592,4 +628,68 @@ document.addEventListener('DOMContentLoaded', async () => {
   initFAQ();
   initNav();
 });
+
+
+
+function openProductModal(id) {
+  const p = PRODUCTS.find(prod => prod.id === id);
+  if (!p) return;
+  
+  const modal = document.getElementById('product-modal');
+  document.getElementById('pm-name').textContent = p.name;
+  document.getElementById('pm-price').textContent = '₹' + p.price;
+  document.getElementById('pm-orig').textContent = p.orig ? '₹' + p.orig : '';
+  document.getElementById('pm-desc').textContent = p.desc || 'No description available.';
+  
+  const mainImg = document.getElementById('pm-main-img');
+  mainImg.src = p.imgUrls && p.imgUrls.length > 0 ? p.imgUrls[0] : p.img;
+  
+  const thumbs = document.getElementById('pm-thumbnails');
+  thumbs.innerHTML = '';
+  if (p.imgUrls && p.imgUrls.length > 1) {
+    p.imgUrls.forEach(url => {
+      thumbs.innerHTML += `<img src="${url}" style="width: 60px; height: 60px; object-fit: cover; cursor: pointer; border: 2px solid transparent; border-radius: 4px;" onclick="document.getElementById('pm-main-img').src=this.src; this.parentNode.querySelectorAll('img').forEach(i=>i.style.borderColor='transparent'); this.style.borderColor='#d4b896';">`;
+    });
+  }
+
+  const btnCart = document.getElementById('pm-btn-cart');
+  btnCart.onclick = () => { addToCart(p.id); closeProductModal(); };
+  
+  const btnWa = document.getElementById('pm-btn-wa');
+  btnWa.onclick = () => { window.open('https://wa.me/919999999999?text=I am interested in ' + p.name + ' (' + p.id + ')', '_blank'); };
+
+  // Related products
+  const related = PRODUCTS.filter(prod => prod.cat === p.cat && prod.id !== p.id).slice(0, 4);
+  const relatedGrid = document.getElementById('pm-related-grid');
+  if (related.length > 0) {
+    relatedGrid.innerHTML = related.map(rp => `
+      <div class="card" onclick="openProductModal('${rp.id}')">
+        <div class="card-img"><img src="${rp.imgUrls ? rp.imgUrls[0] : rp.img}"></div>
+        <div class="card-info">
+          <h3>${rp.name}</h3>
+          <div class="price">₹${rp.price}</div>
+        </div>
+      </div>
+    `).join('');
+  } else {
+    relatedGrid.innerHTML = '<p style="color:#999;">No related products found.</p>';
+  }
+
+  modal.classList.add('open');
+}
+
+function closeProductModal() {
+  document.getElementById('product-modal').classList.remove('open');
+}
+
+
+
+
+
+
+
+
+
+
+
 

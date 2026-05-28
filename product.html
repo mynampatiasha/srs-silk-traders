@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Product Details - SRS Silk Traders</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="index.css" />
+  <style>
+    .product-page-container {
+      max-width: 1200px;
+      margin: 120px auto 50px auto;
+      padding: 0 20px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 40px;
+    }
+    .product-images {
+      flex: 1;
+      min-width: 300px;
+    }
+    .product-images img {
+      width: 100%;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+    .product-thumbnails {
+      display: flex;
+      gap: 15px;
+      margin-top: 20px;
+      overflow-x: auto;
+    }
+    .product-thumbnails img {
+      width: 80px;
+      height: 80px;
+      border-radius: 8px;
+      object-fit: cover;
+      cursor: pointer;
+      border: 2px solid transparent;
+    }
+    .product-thumbnails img:hover {
+      border-color: #d4b896;
+    }
+    .product-info {
+      flex: 1;
+      min-width: 300px;
+    }
+    .product-info h1 {
+      font-size: 42px;
+      font-family: 'Cormorant Garamond', serif;
+      color: #333;
+      margin-bottom: 10px;
+    }
+    .product-price {
+      font-size: 28px;
+      color: #d4b896;
+      margin-bottom: 25px;
+      font-weight: 600;
+    }
+    .product-price strike {
+      color: #999;
+      font-size: 18px;
+      margin-left: 15px;
+      font-weight: normal;
+    }
+    .product-desc {
+      font-size: 16px;
+      line-height: 1.8;
+      color: #555;
+      margin-bottom: 30px;
+    }
+    .action-btns button {
+      width: 100%;
+      margin-bottom: 15px;
+      padding: 18px;
+      font-size: 16px;
+      font-weight: bold;
+      border-radius: 8px;
+    }
+    .related-products {
+      max-width: 1200px;
+      margin: 0 auto 80px auto;
+      padding: 0 20px;
+    }
+    .related-products h2 {
+      text-align: center;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 36px;
+      margin-bottom: 40px;
+    }
+    .related-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 30px;
+    }
+  </style>
+</head>
+<body>
+  <nav class="nav" id="navbar">
+    <div class="nav-logo" onclick="window.location.href='index.html'" style="cursor:pointer">
+      SRS Silk Traders
+      <span>Chickpet, Bengaluru  Premium Silks</span>
+    </div>
+    <div class="nav-links">
+      <a href="index.html#collection">Collection</a>
+      <a href="index.html#gallery">Gallery</a>
+      <a href="index.html#about">About</a>
+      <a href="index.html#contact" class="nav-contact-link">Contact Us</a>
+    </div>
+    <div class="nav-actions">
+      <button class="nav-btn" onclick="window.location.href='index.html#collection'"><i class="fa-solid fa-arrow-left"></i> Back to Store</button>
+    </div>
+  </nav>
+
+  <div id="product-loading" style="text-align: center; padding: 150px 20px; font-size: 20px; color: #666;">
+    <i class="fa-solid fa-spinner fa-spin"></i> Loading product details...
+  </div>
+
+  <div id="product-error" style="display: none; text-align: center; padding: 150px 20px; font-size: 20px; color: red;">
+    Product not found!
+  </div>
+
+  <div class="product-page-container" id="product-container" style="display: none;">
+    <div class="product-images">
+      <img id="main-img" src="" alt="Product">
+      <div class="product-thumbnails" id="thumbnails"></div>
+    </div>
+    <div class="product-info">
+      <h1 id="p-title"></h1>
+      <div class="product-price">
+        <span id="p-price"></span>
+        <strike id="p-orig"></strike>
+      </div>
+      <p class="product-desc" id="p-desc"></p>
+      
+      <div class="action-btns" id="action-btns">
+        <button class="btn-primary" id="btn-add-cart">Add to Cart</button>
+        <button class="btn-secondary" id="btn-wa">Enquire on WhatsApp</button>
+        <button class="btn-secondary" id="btn-share" style="background: #eee; color: #333; border: 1px solid #ccc;">Share This Product</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="related-products" id="related-container" style="display:none;">
+    <h2>You May Also Like</h2>
+    <div class="related-grid" id="related-grid"></div>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <div class="footer-logo">SRS Silk Traders</div>
+        <p>Premium silk sarees, kanjeevarams, and expert blouse stitching from Chickpet, Bengaluru.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore-compat.js"></script>
+  <script src="product.js"></script>
+</body>
+</html>

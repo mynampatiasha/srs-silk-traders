@@ -49,6 +49,7 @@ function loadCategories() {
       const cat = doc.data();
       catsList.innerHTML += `
         <div class="item-card">
+          <img src="${cat.img}" alt="${cat.name}" style="border-radius:50%; width:60px; height:60px; object-fit:cover; margin:0 auto 10px auto;">
           <strong>${cat.name}</strong>
           <span>ID: ${cat.id}</span>
           <button onclick="deleteCat('${doc.id}')">Delete</button>
@@ -59,14 +60,58 @@ function loadCategories() {
   });
 }
 
+// Image Compression Helper
+function compressImage(file, maxWidth = 800) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = event => {
+      const img = new Image();
+      img.src = event.target.result;
+      img.onload = () => {
+        let width = img.width;
+        let height = img.height;
+        if (width > maxWidth) {
+          height = Math.round((height * maxWidth) / width);
+          width = maxWidth;
+        }
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+        resolve(canvas.toDataURL('image/jpeg', 0.7)); // Compress to 70% JPEG to save space
+      };
+      img.onerror = error => reject(error);
+    };
+    reader.onerror = error => reject(error);
+  });
+}
+
+const btnAddCat = document.getElementById('btn-add-cat');
+
 catForm.addEventListener('submit', async (e) => {
   e.preventDefault();
+  btnAddCat.disabled = true;
+  btnAddCat.textContent = "Uploading...";
+
   const id = document.getElementById('c-id').value.toLowerCase().replace(/\s+/g, '_');
   const name = document.getElementById('c-name').value;
+  const file = document.getElementById('c-img').files[0];
   
-  await db.collection('categories').add({ id, name });
-  catForm.reset();
-  showStatus('Category Added!');
+  try {
+    const base64Img = await compressImage(file, 400); // Small size for category circles
+    await db.collection('categories').doc(id).set({ id, name, img: base64Img });
+    
+    catForm.reset();
+    showStatus('Category Added!');
+  } catch (error) {
+    console.error(error);
+    alert('Error uploading category!');
+  }
+
+  btnAddCat.disabled = false;
+  btnAddCat.textContent = "Add Category";
 });
 
 window.deleteCat = async (id) => {
@@ -153,10 +198,8 @@ productForm.addEventListener('submit', async (e) => {
   try {
     let uploadedUrls = [];
     for (let file of productFiles) {
-      const storageRef = storage.ref('products/' + Date.now() + '_' + file.name);
-      const snapshot = await storageRef.put(file);
-      const imgUrl = await snapshot.ref.getDownloadURL();
-      uploadedUrls.push(imgUrl);
+      const base64Img = await compressImage(file, 800); // 800px max for products
+      uploadedUrls.push(base64Img);
     }
 
     await db.collection('products').add({
@@ -179,6 +222,35 @@ productForm.addEventListener('submit', async (e) => {
   btnAddProduct.disabled = false;
   btnAddProduct.textContent = "Add Product";
 });
+
+window.toggleStock = async (id, currentStock) => {
+  await db.collection('products').doc(id).update({
+    inStock: !currentStock
+  });
+};
+
+window.editProduct = async (id) => {
+  const doc = await db.collection('products').doc(id).get();
+  if(!doc.exists) return;
+  const p = doc.data();
+  
+  document.getElementById('p-name').value = p.name;
+  document.getElementById('p-price').value = p.price;
+  document.getElementById('p-orig').value = p.orig || '';
+  document.getElementById('p-cat').value = p.cat;
+  document.getElementById('p-desc').value = p.desc || '';
+  document.getElementById('p-tags').value = p.tags ? p.tags.join(', ') : '';
+  
+  // We can't easily populate file inputs due to browser security, so we clear them.
+  productFiles = [];
+  document.getElementById('image-preview-container').innerHTML = '';
+  document.getElementById('p-img').value = '';
+  
+  window.editingProductId = id;
+  document.getElementById('btn-add-product').textContent = "Update Product";
+  
+  window.scrollTo(0,0);
+};
 
 window.deleteProduct = async (id) => {
   if(confirm('Are you sure you want to delete this product?')) {
@@ -219,12 +291,10 @@ bannerForm.addEventListener('submit', async (e) => {
   const alt = document.getElementById('b-alt').value;
 
   try {
-    const storageRef = storage.ref('banners/' + Date.now() + '_' + file.name);
-    const snapshot = await storageRef.put(file);
-    const imgUrl = await snapshot.ref.getDownloadURL();
+    const base64Img = await compressImage(file, 1200);
 
     await db.collection('banners').add({
-      label, alt, url: imgUrl, createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      label, alt, url: base64Img, createdAt: firebase.firestore.FieldValue.serverTimestamp()
     });
 
     bannerForm.reset();
@@ -248,3 +318,6 @@ window.deleteBanner = async (id) => {
 loadCategories();
 loadProducts();
 loadBanners();
+
+
+
