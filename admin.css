@@ -174,3 +174,13 @@ button:disabled {
     grid-template-columns: 1fr;
   }
 }
+
+#main-admin-content {
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  #main-admin-content {
+    flex-direction: column !important;
+  }
+}

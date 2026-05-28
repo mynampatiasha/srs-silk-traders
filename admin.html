@@ -11,6 +11,18 @@
   <script src="https://www.gstatic.com/firebasejs/10.8.1/firebase-storage-compat.js"></script>
 </head>
 <body>
+  <!-- LOGIN OVERLAY -->
+  <div id="login-overlay" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #1e293b; z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+    <div style="background: #fff; padding: 40px; border-radius: 12px; text-align: center; max-width: 400px; width: 90%; box-shadow: 0 10px 25px rgba(0,0,0,0.5);">
+      <h2 style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin-top: 0; color: #1e293b;">Admin Access Required</h2>
+      <p style="color: #64748b; margin-bottom: 20px;">Please enter the secure PIN to access the store management portal.</p>
+      <input type="password" id="admin-pin" placeholder="Enter PIN (8059)" style="width: 100%; padding: 12px; margin-bottom: 20px; border: 2px solid #cbd5e1; border-radius: 6px; font-size: 20px; text-align: center; box-sizing: border-box; letter-spacing: 5px;">
+      <button onclick="checkPin()" style="background: #3b82f6; color: #fff; border: none; padding: 12px 24px; font-size: 16px; font-weight: bold; border-radius: 6px; cursor: pointer; width: 100%;">Unlock Portal</button>
+      <p id="pin-error" style="color: #ef4444; margin-top: 15px; display: none; font-weight: bold;">Incorrect PIN. Access Denied.</p>
+    </div>
+  </div>
+
+  <div id="main-admin-content" style="display: none; width: 100%; min-height: 100vh; display: none; flex-direction: inherit;">
 
   <div class="admin-sidebar">
     <h2>SRS Admin</h2>
@@ -84,6 +96,7 @@
 
   </div>
 
+  </div>
   <script src="admin.js"></script>
 </body>
 </html>
